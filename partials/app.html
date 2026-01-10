@@ -1,0 +1,23 @@
+<header class="topbar">
+  <h1>Incremental Starter</h1>
+  <div class="stats">
+    Gold: <strong><bind-text key="gold" format="fixed2"></bind-text></strong>
+    <span class="muted"
+      >(+<bind-text key="goldPerSec" format="fixed2"></bind-text>/s)</span
+    >
+  </div>
+</header>
+
+<main class="main">
+  <tab-view>
+    <section data-tab="Game" id="tab-game"></section>
+    <section data-tab="Graphs" id="tab-graphs"></section>
+  </tab-view>
+</main>
+
+<footer class="footer">
+  <button id="saveButton">Save</button>
+  <button id="loadButton">Load</button>
+  <button id="resetButton">Reset</button>
+  <span class="muted">Save is stored in localStorage</span>
+</footer>
