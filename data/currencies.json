@@ -1,0 +1,4 @@
+[
+  { "id": "gold", "name": "Gold", "start": 0, "perSec": 0 },
+  { "id": "mana", "name": "Mana", "start": 0, "perSec": 1 }
+]

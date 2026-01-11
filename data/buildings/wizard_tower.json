@@ -1,0 +1,15 @@
+{
+  "id": "wizard_tower",
+  "name": "Wizard Tower",
+  "cost": {
+    "gold": { "base": 100, "scale": 1.17 },
+    "mana": { "base": 25, "scale": 1.12 }
+  },
+  "production": {
+    "mana": 0.3
+  },
+  "unlock": {
+    "currencyAtLeast": { "gold": 50 },
+    "buildingCountAtLeast": { "miner": 5 }
+  }
+}

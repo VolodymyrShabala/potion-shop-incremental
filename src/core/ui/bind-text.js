@@ -1,3 +1,5 @@
+import { resolvePath } from "../../utility/pathResolver.js";
+
 export class BindText extends HTMLElement {
   #unsub = null;
 
@@ -11,7 +13,7 @@ export class BindText extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["key", "format"];
+    return ["path", "format"];
   }
 
   attributeChangedCallback() {
@@ -21,15 +23,14 @@ export class BindText extends HTMLElement {
   #wire() {
     this.disconnectCallback();
 
-    const key = this.getAttribute("key");
-    if (key == null) {
+    const path = this.getAttribute("path");
+    if (path == null) {
       return;
     }
 
-    const game = window.game;
-    const obs = game?.[key];
-    if (obs == null || typeof obs.subscribe !== "function") {
-      this.textContent = `Missing: ${key}`;
+    const value = resolvePath(window.game, path);
+    if (value == null || typeof value.subscribe !== "function") {
+      this.textContent = `Missing: ${path}`;
       return;
     }
 
@@ -45,7 +46,7 @@ export class BindText extends HTMLElement {
       return String(v);
     };
 
-    this.#unsub = obs.subscribe((v) => {
+    this.#unsub = value.subscribe((v) => {
       this.textContent = formatValue(v);
     });
   }

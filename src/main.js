@@ -1,16 +1,19 @@
 import { loadPartialsIntoApp, fetchText } from "./core/templateLoader.js";
 import { GameModel } from "./core/game/gameModel.js";
-import { handleAction } from "./core/game/actions.js";
 
 // V: Register components (side-effect imports)
 import "./core/ui/bind-text.js";
 import "./core/ui/game-button.js";
 import "./core/ui/tab-view.js";
-import { registerDefaultActions } from "./core/game/defaultActions.js";
+import "./core/ui/cost-list.js";
+
+import { loadContent } from "./core/game/loadContent.js";
 
 const app = document.getElementById("app");
 
 window.game = new GameModel();
+
+await loadContent(window.game);
 
 await loadPartialsIntoApp(app);
 
@@ -22,21 +25,15 @@ document.getElementById("tab-graphs").innerHTML = await fetchText(
   "./partials/graphs.html"
 );
 
-registerDefaultActions();
-
 const tabView = document.querySelector("tab-view");
 tabView.setAttribute("ready", "");
-
-// V: Handle generic buttons actions
-app.addEventListener("game-action", (e) => {
-  handleAction(window.game, e.detail.action);
-});
 
 // V: Save/load/reset
 const SAVE_KEY = "inc_save_v1";
 
 document.getElementById("saveButton").onclick = () => {
   localStorage.setItem(SAVE_KEY, JSON.stringify(window.game.toJSON()));
+  console.log(JSON.stringify(window.game.toJSON()));
 };
 
 document.getElementById("loadButton").onclick = () => {
@@ -63,7 +60,3 @@ function loop(now) {
 }
 
 requestAnimationFrame(loop);
-
-console.log(
-  document.querySelectorAll("tab-view [data-tab-buttons] button").length
-);

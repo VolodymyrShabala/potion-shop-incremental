@@ -2,7 +2,11 @@
   <h2>Actions</h2>
 
   <div class="row">
-    <game-button label="Harvest (+5 gold)" action="harvest"></game-button>
+    <game-button
+      label="Harvest (+5 gold)"
+      target=""
+      method="addCurrencyManually"
+    ></game-button>
   </div>
 
   <h2>Upgrades</h2>
@@ -11,15 +15,19 @@
     <div class="grow">
       <div><string>Miner</string></div>
       <div class="muted">
-        Owned: <bind-text key="minerCount" format="int"></bind-text> - Cost:
-        <bind-text key="minerCost" format="int"></bind-text>
+        Owned:
+        <bind-text path="buildings.miner.count" format="int"></bind-text> -
+        <!-- Cost:
+        <bind-text path="buildings.miner.cost.gold" format="int"></bind-text> -->
+        Cost: <cost-list path="buildings.miner"></cost-list>
       </div>
     </div>
 
     <game-button
-      label="Buy miner"
-      action="buy-miner"
-      enabled-key="canBuyMiner"
+      target="buildings.miner"
+      method="buy"
+      enabled="buildings.miner.canBuy"
+      label="Buy Miner"
     ></game-button>
   </div>
 </div>

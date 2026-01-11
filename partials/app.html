@@ -1,10 +1,32 @@
 <header class="topbar">
   <h1>Incremental Starter</h1>
   <div class="stats">
-    Gold: <strong><bind-text key="gold" format="fixed2"></bind-text></strong>
-    <span class="muted"
-      >(+<bind-text key="goldPerSec" format="fixed2"></bind-text>/s)</span
-    >
+    <div>
+      Gold:
+      <strong
+        ><bind-text path="currencies.gold.amount" format="fixed2"></bind-text
+      ></strong>
+      <span class="muted"
+        >(+<bind-text
+          path="currencies.gold.amountPerSec"
+          format="fixed2"
+        ></bind-text
+        >/s)</span
+      >
+    </div>
+    <div>
+      Mana:
+      <strong
+        ><bind-text path="currencies.mana.amount" format="fixed2"></bind-text
+      ></strong>
+      <span class="muted"
+        >(+<bind-text
+          path="currencies.mana.amountPerSec"
+          format="fixed2"
+        ></bind-text
+        >/s)</span
+      >
+    </div>
   </div>
 </header>
 

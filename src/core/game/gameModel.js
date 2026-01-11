@@ -1,37 +1,43 @@
-import { computed, ObservableValue } from "../observable.js";
+// import { computed, ObservableValue } from "../observable.js";
+// import { Miner } from "./buildings/miner.js";
 
 export class GameModel {
   constructor() {
-    this.gold = new ObservableValue(0);
-    this.goldPerSec = new ObservableValue(1);
+    this.currencies = {};
+    this.buildings = {};
 
-    this.minerCount = new ObservableValue(0);
-    this.minerBaseCost = new ObservableValue(10);
+    // this.goldPerSec = computed(
+    //   () => this.miner.goldPerSec.value + 1,
+    //   [this.miner.goldPerSec]
+    // );
+  }
 
-    this.minerCost = computed(
-      () =>
-        Math.floor(
-          this.minerBaseCost.value * Math.pow(1.15, this.minerCount.value)
-        ),
-      [this.minerBaseCost, this.minerCount]
-    );
-
-    this.canButMiner = computed(
-      () => this.gold.value >= this.minerCost.value,
-      [this.gold, this.minerCost]
-    );
+  currency(id) {
+    return this.currencies[id];
   }
 
   tick(dtSeconds) {
-    this.gold.value = this.gold.value + this.goldPerSec.value * dtSeconds;
+    for (const building of Object.values(this.buildings)) {
+      building.tick(dtSeconds);
+    }
+    // this.gold.value += this.goldPerSec.value * dtSeconds;
+  }
+
+  addCurrencyManually() {
+    this.currencies["gold"].amount.value += 5;
   }
 
   toJSON() {
     return {
-      gold: this.gold.value,
-      goldPerSec: this.goldPerSec.value,
-      minerCount: this.minerCount.value,
-      minerBaseCost: this.minerBaseCost.value,
+      currencies: Object.fromEntries(
+        Object.entries(this.currencies).map(([id, obs]) => [id, obs.value])
+      ),
+      buildings: Object.fromEntries(
+        Object.entries(this.buildings).map(([id, building]) => [
+          id,
+          building.toJSON(),
+        ])
+      ),
     };
   }
 
@@ -40,17 +46,20 @@ export class GameModel {
       return;
     }
 
-    if (typeof data.gold === "number") {
-      this.gold.value = data.gold;
+    if (data.currencies) {
+      for (const [id, value] of Object.entries(data.currencies)) {
+        if (this.currencies[id] && typeof value === "number") {
+          this.currencies[id].value = value;
+        }
+      }
     }
-    if (typeof data.goldPerSec === "number") {
-      this.goldPerSec.value = data.goldPerSec;
-    }
-    if (typeof data.minerCount === "number") {
-      this.minerCount.value = data.minerCount;
-    }
-    if (typeof data.minerBaseCost === "number") {
-      this.minerBaseCost.value = data.minerBaseCost;
+    if (data.buildings) {
+      for (const [id, building] of Object.entries(data.buildings)) {
+        if (this.buildings[id]) {
+          console.log("Type of building", typeof building);
+          this.buildings[id].fromJSON(building);
+        }
+      }
     }
   }
 }

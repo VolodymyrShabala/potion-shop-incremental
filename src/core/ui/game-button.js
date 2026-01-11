@@ -1,78 +1,78 @@
+import { resolvePath } from "../../utility/pathResolver.js";
+
 export class GameButton extends HTMLElement {
-  #unsubEnabled = null;
+  #unsub = null;
 
   connectedCallback() {
-    this.#render();
-    this.#wireEnabled();
+    this.#wire();
   }
 
   disconnectedCallback() {
-    this.#unsubEnabled?.();
-    this.#unsubEnabled = null;
+    this.#unsub?.();
+    this.#unsub = null;
   }
 
-  static get obsesrvedAttributes() {
-    return ["label", "action", "enabled-key"];
+  static get observedAttributes() {
+    return ["label", "target", "enabled", "method"];
   }
 
   attributeChangedCallback() {
     if (this.isConnected) {
-      this.#render();
-      this.#wireEnabled();
+      this.#wire();
     }
   }
 
-  #render() {
-    const template = document.getElementById("template-game-button");
-    if (template == null) {
-      this.innerHTML = `<button></button>`;
-    } else {
-      this.replaceChildren(template.content.cloneNode(true));
-    }
-
-    const button = this.querySelector("button");
-    button.textContent = this.getAttribute("label") ?? "Button";
-
-    button.onclick = () => {
-      const action = this.getAttribute("action");
-      if (action == null) {
-        return;
-      }
-
-      this.dispatchEvent(
-        new CustomEvent("game-action", {
-          bubbles: true,
-          composed: true,
-          detail: { action },
-        })
-      );
-    };
-  }
-
-  #wireEnabled() {
+  #wire() {
     this.disconnectedCallback();
 
+    const targetPath = this.getAttribute("target");
+    const methodName = this.getAttribute("method");
+    const enabledPath = this.getAttribute("enabled");
+    const label = this.getAttribute("label") ?? methodName ?? "Button";
+
+    // V: Render
+    this.innerHTML = `<button class="btn"></button>`;
     const button = this.querySelector("button");
     if (button == null) {
       return;
     }
 
-    const enableKey = this.getAttribute("enabled-key");
-    if (enableKey == null) {
-      button.disabled = false;
+    button.textContent = label;
+
+    // V: Resolve target object
+    const targetObj = targetPath
+      ? resolvePath(window.game, targetPath)
+      : window.game;
+
+    if (targetObj == null) {
+      button.disabled = true;
+      button.title = `Missing target:  ${targetPath}`;
       return;
     }
 
-    const game = window.game;
-    const observable = game?.[enableKey];
-    if (observable == null || typeof observable.subscribe != "function") {
-      button.disabled = false;
+    // V: Resolve method
+    const fn = targetObj?.[methodName];
+    if (typeof fn !== "function") {
+      button.disabled = true;
+      button.title = `Missing method: ${targetPath}.${methodName}`;
       return;
     }
 
-    this.#unsubEnabled = observable.subscribe((v) => {
-      button.disabled = !Boolean(v);
-    });
+    button.onclick = () => fn.call(targetObj);
+
+    if (enabledPath) {
+      const enabledObservables = resolvePath(window.game, enabledPath);
+      if (
+        enabledObservables &&
+        typeof enabledObservables.subscribe === "function"
+      ) {
+        this.#unsub = enabledObservables.subscribe((v) => {
+          button.disabled = !Boolean(v);
+        });
+      } else {
+        button.title = `Enabled path not observable: ${enabledPath}`;
+      }
+    }
   }
 }
 
