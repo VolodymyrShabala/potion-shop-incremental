@@ -1,13 +1,13 @@
 {
-  "id": "miner",
-  "name": "Miner",
-  "cost": {
-    "gold": { "base": 10, "scale": 1.15 }
-  },
-  "production": {
-    "gold": 0.5
-  },
-  "unlock": {
-    "currencyAtLeast": { "gold": 0 }
-  }
+    "id": "miner",
+    "name": "Miner",
+    "cost": {
+        "gold": { "base": 10, "scale": 1.15 }
+    },
+    "production": {
+        "gold": 0.5
+    },
+    "unlock": {
+        "currencyAtLeast": { "gold": 0 }
+    }
 }

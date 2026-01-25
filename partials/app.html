@@ -1,45 +1,24 @@
 <header class="topbar">
-  <h1>Incremental Starter</h1>
-  <div class="stats">
-    <div>
-      Gold:
-      <strong
-        ><bind-text path="currencies.gold.amount" format="fixed2"></bind-text
-      ></strong>
-      <span class="muted"
-        >(+<bind-text
-          path="currencies.gold.amountPerSec"
-          format="fixed2"
-        ></bind-text
-        >/s)</span
-      >
+    <h1>Incremental Starter</h1>
+    <div class="stats">
+        <currency-list
+            path="currencies"
+            format="fixed2"
+            show-per-sec
+        ></currency-list>
     </div>
-    <div>
-      Mana:
-      <strong
-        ><bind-text path="currencies.mana.amount" format="fixed2"></bind-text
-      ></strong>
-      <span class="muted"
-        >(+<bind-text
-          path="currencies.mana.amountPerSec"
-          format="fixed2"
-        ></bind-text
-        >/s)</span
-      >
-    </div>
-  </div>
 </header>
 
 <main class="main">
-  <tab-view>
-    <section data-tab="Game" id="tab-game"></section>
-    <section data-tab="Graphs" id="tab-graphs"></section>
-  </tab-view>
+    <tab-view>
+        <section data-tab="Game" id="tab-game"></section>
+        <section data-tab="Graphs" id="tab-graphs"></section>
+    </tab-view>
 </main>
 
 <footer class="footer">
-  <button id="saveButton">Save</button>
-  <button id="loadButton">Load</button>
-  <button id="resetButton">Reset</button>
-  <span class="muted">Save is stored in localStorage</span>
+    <button id="saveButton">Save</button>
+    <button id="loadButton">Load</button>
+    <button id="resetButton">Reset</button>
+    <span class="muted">Save is stored in localStorage</span>
 </footer>

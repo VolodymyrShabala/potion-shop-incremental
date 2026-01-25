@@ -1,55 +1,55 @@
-import { resolvePath } from "../../utility/pathResolver.js";
+import { resolvePath } from '../../utility/pathResolver.js';
 
 export class BindText extends HTMLElement {
-  #unsub = null;
+    #unsub = null;
 
-  connectCallback() {
-    this, wire();
-  }
-
-  disconnectCallback() {
-    this.#unsub?.();
-    this.#unsub = null;
-  }
-
-  static get observedAttributes() {
-    return ["path", "format"];
-  }
-
-  attributeChangedCallback() {
-    this.#wire();
-  }
-
-  #wire() {
-    this.disconnectCallback();
-
-    const path = this.getAttribute("path");
-    if (path == null) {
-      return;
+    connectCallback() {
+        (this, wire());
     }
 
-    const value = resolvePath(window.game, path);
-    if (value == null || typeof value.subscribe !== "function") {
-      this.textContent = `Missing: ${path}`;
-      return;
+    disconnectCallback() {
+        this.#unsub?.();
+        this.#unsub = null;
     }
 
-    const format = this.getAttribute("format") || "raw";
-    const formatValue = (v) => {
-      if (format === "int") {
-        return String(Math.floor(v));
-      }
-      if (format === "fixed2") {
-        return Number(v).toFixed(2);
-      }
+    static get observedAttributes() {
+        return ['path', 'format'];
+    }
 
-      return String(v);
-    };
+    attributeChangedCallback() {
+        this.#wire();
+    }
 
-    this.#unsub = value.subscribe((v) => {
-      this.textContent = formatValue(v);
-    });
-  }
+    #wire() {
+        this.disconnectCallback();
+
+        const path = this.getAttribute('path');
+        if (path == null) {
+            return;
+        }
+
+        const value = resolvePath(window.game, path);
+        if (value == null || typeof value.subscribe !== 'function') {
+            this.textContent = `Missing: ${path}`;
+            return;
+        }
+
+        const format = this.getAttribute('format') || 'raw';
+        const formatValue = (v) => {
+            if (format === 'int') {
+                return String(Math.floor(v));
+            }
+            if (format === 'fixed2') {
+                return Number(v).toFixed(2);
+            }
+
+            return String(v);
+        };
+
+        this.#unsub = value.subscribe((v) => {
+            this.textContent = formatValue(v);
+        });
+    }
 }
 
-customElements.define("bind-text", BindText);
+customElements.define('bind-text', BindText);
