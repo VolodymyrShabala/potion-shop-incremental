@@ -3,7 +3,7 @@
     "name": "Wizard Tower",
     "cost": {
         "gold": { "base": 100, "scale": 1.17 },
-        "mana": { "base": 0, "scale": 1.12 }
+        "mana": { "base": 10, "scale": 1.12 }
     },
     "production": {
         "mana": 0.3

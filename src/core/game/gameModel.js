@@ -30,7 +30,7 @@ export class GameModel {
     }
 
     addCurrencyManually() {
-        this.currencies['gold'].amount.value += 5;
+        Object.values(this.currencies)[0].amount.value += 5;
     }
 
     toJSON() {

@@ -58,7 +58,6 @@ export class TabView extends HTMLElement {
         panels.forEach((p, i) => (p.hidden = i !== 0));
     }
 
-    // TODO V: What does it do?
     #setActive(i) {
         this.#active = i;
         const buttons = Array.from(
